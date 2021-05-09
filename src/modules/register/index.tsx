@@ -141,7 +141,7 @@ const Register: React.FC<{ history: any }> = ({history}) => {
                     </div>
 
                     <div style={{marginTop: 15}}>
-                        <ReCAPTCHA sitekey="6Lfaz8waAAAAALANyOlnpXnxWhWpBDq2hN_umXjC" onChange={(data) => {
+                        <ReCAPTCHA sitekey="6Ldb6foUAAAAANXRBMbMqlZowbdhvcg1NBJGx7OG" onChange={(data) => {
                             setCaptcha(data);
                         }}/>
                     </div>
