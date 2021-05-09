@@ -83,7 +83,7 @@ const Register: React.FC<{ history: any }> = ({history}) => {
                             <input type="text" placeholder={'Your Name'} onChange={(event) => setName(event.target.value)}/>
                         </div>
                         <small style={styleValidate((commonValidate(name, /^[a-zA-z\s]{6,25}$/) || name === null), 'text')}>
-                            YYour name should be between 6 and 25 characters
+                            Your name should be between 6 and 25 characters
                         </small>
                     </div>
 
@@ -93,7 +93,7 @@ const Register: React.FC<{ history: any }> = ({history}) => {
                             <input type="text" placeholder={'Your Email'} onChange={(event) => setMail(event.target.value)}/>
                         </div>
                         <small style={(validateMail(mail) || mail === null) ? {} : {visibility: 'visible'}}>
-                            wrong gmail format !!!
+                            Wrong gmail format !!!
                         </small>
                     </div>
 
