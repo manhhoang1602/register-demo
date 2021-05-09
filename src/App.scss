@@ -1,0 +1,14 @@
+@keyframes animationPushMes {
+  from {
+    right: -40%;
+  }
+  to {
+    right: 1%;
+  }
+}
+
+.animation-push-mes {
+  animation-name: animationPushMes;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
