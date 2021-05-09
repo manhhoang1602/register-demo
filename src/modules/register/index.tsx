@@ -83,7 +83,7 @@ const Register: React.FC<{ history: any }> = ({history}) => {
                             <input type="text" placeholder={'Your Name'} onChange={(event) => setName(event.target.value)}/>
                         </div>
                         <small style={styleValidate((commonValidate(name, /^[a-zA-z\s]{6,25}$/) || name === null), 'text')}>
-                            Your name must has 6-50 characters
+                            YYour name should be between 6 and 25 characters
                         </small>
                     </div>
 
@@ -93,7 +93,7 @@ const Register: React.FC<{ history: any }> = ({history}) => {
                             <input type="text" placeholder={'Your Email'} onChange={(event) => setMail(event.target.value)}/>
                         </div>
                         <small style={(validateMail(mail) || mail === null) ? {} : {visibility: 'visible'}}>
-                            illegal
+                            wrong gmail format !!!
                         </small>
                     </div>
 
@@ -104,7 +104,7 @@ const Register: React.FC<{ history: any }> = ({history}) => {
                             <input type="text" placeholder={'Your Address'} onChange={(event) => setAddress(event.target.value)}/>
                         </div>
                         <small style={styleValidate(commonValidate(address, /^[a-zA-z\d\s]{6,50}$/) || address === null, 'text')}>
-                            Your name must has 6-50 characters
+                            Your address should be between 6 and 50 characters
                         </small>
                     </div>
 
@@ -115,7 +115,7 @@ const Register: React.FC<{ history: any }> = ({history}) => {
                             <input type="text" placeholder={'Phone Number'} onChange={(event) => setPhoneNumber(event.target.value)}/>
                         </div>
                         <small style={styleValidate(commonValidate(phoneNumber, /^[\d]{10,10}$/) || phoneNumber === null, 'text')}>
-                            Your name must has 6-50 characters
+                            Your phone number must have 10 digits
                         </small>
                     </div>
 
@@ -126,7 +126,7 @@ const Register: React.FC<{ history: any }> = ({history}) => {
                             <input type={checkPass ? 'password' : 'text'} placeholder={'Password'} onChange={(event) => setPass(event.target.value)}/>
                         </div>
                         <small style={styleValidate(commonValidate(pass, /^[\w\W]{6,}$/) || pass === null, 'text')}>
-                            Your name must has 6-50 characters
+                            Your password should be less than 6 characters
                         </small>
                     </div>
 
@@ -136,12 +136,12 @@ const Register: React.FC<{ history: any }> = ({history}) => {
                             <input type='password' placeholder={'Repeat your password'} onChange={(event) => setRepeatPass(event.target.value)}/>
                         </div>
                         <small style={styleValidate(((pass === repeatPass) || (repeatPass === null)), 'text')}>
-                            Your name must has 6-50 characters
+                            Not match your password
                         </small>
                     </div>
 
                     <div style={{marginTop: 15}}>
-                        <ReCAPTCHA sitekey="6Ldb6foUAAAAANXRBMbMqlZowbdhvcg1NBJGx7OG" onChange={(data) => {
+                        <ReCAPTCHA sitekey="6Lf_3cwaAAAAAIFbhWLizmBrGcl9jGO2W9ogXeYE" onChange={(data) => {
                             setCaptcha(data);
                         }}/>
                     </div>
