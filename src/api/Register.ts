@@ -7,7 +7,8 @@ export interface IResUser {
     mail: string
     address: string
     phoneNumber: string
-    password: string
+    password: string,
+    createAt: string
 }
 
 export function sendRegister(data: IResUser, url: string):Promise<IApiRes<IResUser>> {

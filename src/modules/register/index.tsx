@@ -69,7 +69,8 @@ const Register: React.FC<{ history: any }> = ({history}) => {
                 address: address || '',
                 mail: mail || '',
                 phoneNumber: phoneNumber || '',
-                password: repeatPass || ''
+                password: repeatPass || '',
+                createAt: (Date.now()).toString()
             }
             let res = await sendRegister(data, 'https://60964612116f3f00174b2db6.mockapi.io/user');
             if (res.status === 201) {

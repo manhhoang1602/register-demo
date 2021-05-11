@@ -30,7 +30,7 @@ const ListUser: React.FC<any> = () => {
     const getUsers = async (page: number, search?: string) => {
         try {
             BaseService.setStatusLoading(true);
-            const res = await getListUser(`https://60964612116f3f00174b2db6.mockapi.io/user?page=${page}&limit=5${search ? `&name=${search}` : ''}`);
+            const res = await getListUser(`https://60964612116f3f00174b2db6.mockapi.io/user?sortBy=createAt&order=desc&page=${page}&limit=5${search ? `&name=${search}` : ''}`);
             if (res.status === 200) {
                 BaseService.setStatusLoading(false)
                 if (res.body.length !== 0) {
