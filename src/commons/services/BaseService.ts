@@ -97,4 +97,60 @@ export const postRequest = async (data: any, url: string): Promise<IApiRes<any>>
     }
 }
 
+export const putRequest = async (data: any, url: string): Promise<IApiRes<any>> => {
+    try {
+        let res = await axios({
+            method: 'put',
+            url: url,
+            data: data
+        });
+
+        if (res) {
+            return {
+                status: res.status,
+                body: res.data
+            }
+        }
+
+        return {
+            status: 0,
+            body: {}
+        }
+    } catch (e) {
+        console.error(e);
+        return {
+            status: e.response.status,
+            body: e.response.data,
+        }
+    }
+}
+
+export const deleteRequest = async (url: string): Promise<IApiRes<any>> => {
+    try {
+        let res = await axios({
+            method: 'delete',
+            url: url
+        });
+
+        if (res) {
+            return {
+                status: res.status,
+                body: res.data
+            }
+        }
+
+        return {
+            status: 0,
+            body: {}
+        }
+    } catch (e) {
+        console.error(e);
+        return {
+            status: e.response.status,
+            body: e.response.data,
+        }
+    }
+}
+
+
 export default new BaseService('info', 'no mes', false, false);

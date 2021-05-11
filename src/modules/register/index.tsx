@@ -1,44 +1,68 @@
 import * as React from 'react';
 import './index.scss';
-import {useState} from "react";
+import {useCallback, useState} from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import {commonValidate, validateMail} from "./Service";
+import {commonValidate, formatPhoneNumber, validateMail} from "./Service";
 import BaseService from "../../commons/services/BaseService";
 import {IResUser, sendRegister} from "../../api/Register";
+import {Button, TextField, Form, FormLayout} from '@shopify/polaris';
 
-interface IUser extends IResUser {}
+interface IUser extends IResUser {
+}
 
 const Register: React.FC<{ history: any }> = ({history}) => {
 
-    const [name, setName] = useState<string | null>(null);
-    const [mail, setMail] = useState<string | null>(null);
-    const [address, setAddress] = useState<string | null>(null);
-    const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
-    const [pass, setPass] = useState<string | null>(null);
-    const [repeatPass, setRepeatPass] = useState<string | null>(null);
-    const [captcha, setCaptcha] = useState<string | null>(null);
-    const [checkPass, setCheckPass] = useState<boolean>(true);
+    const [name, setName] = useState<string>('');
+    const [mail, setMail] = useState<string>('');
+    const [address, setAddress] = useState<string>('');
+    const [phoneNumber, setPhoneNumber] = useState<string>('');
+    const [pass, setPass] = useState<string>('');
+    const [repeatPass, setRepeatPass] = useState<string>('');
+    const [captcha, setCaptcha] = useState<string>('');
 
-    const styleValidate = (check: boolean | null, type: 'text' | 'icon'): React.CSSProperties => {
-        if (check) return {}; else if (type === 'text') return {visibility: 'visible'}; else return {color: 'red'};
+    const [statusValName, setStatusValName] = useState<boolean>(false);
+    const [statusValMail, setStatusValMail] = useState<boolean>(false);
+    const [statusValAddress, setStatusValAddress] = useState<boolean>(false);
+    const [statusValPhone, setStatusValPhone] = useState<boolean>(false);
+    const [statusValPass, setStatusValPass] = useState<boolean>(false);
+    const [statusValRepeatPass, setStatusValRepeatPass] = useState<boolean>(false);
+    const [statusFir, setStatusFir] = useState<boolean>(false);
+
+    const handleNameChange = useCallback((value) => setName(value), []);
+    const handleEmailChange = useCallback((value) => setMail(value), []);
+    const handleAddressChange = useCallback((value) => setAddress(value), []);
+    const handlePhoneChange = useCallback((value) => setPhoneNumber(formatPhoneNumber(value)), []);
+    const handlePassChange = useCallback((value) => setPass(value), []);
+    const handleRepeatPassChange = useCallback((value) => setRepeatPass(value), []);
+    const handleRecaptchaChange = useCallback((value) => setCaptcha(value), []);
+
+    const validateAll = async (): Promise<boolean> => {
+        await setStatusFir(true)
+        if (commonValidate(name, /^[a-zA-z\s]{6,25}$/)) await setStatusValName(true); else await setStatusValName(false)
+        if (validateMail(mail)) await setStatusValMail(true); else await setStatusValMail(false)
+        if (commonValidate(address, /^[a-zA-z\d\s]{6,50}$/)) await setStatusValAddress(true); else await setStatusValAddress(false)
+        if (commonValidate(phoneNumber, /^[\d-]{12,12}$/)) await setStatusValPhone(true); else await setStatusValPhone(false)
+        if (commonValidate(pass, /^[\w\W]{6,}$/)) await setStatusValPass(true); else await setStatusValPass(false)
+        if (pass === repeatPass) await setStatusValRepeatPass(true); else await setStatusValRepeatPass(false)
+        return true
     }
 
-    const validateAll = (): boolean => {
-        if (
-            commonValidate(name, /^[a-zA-z\s]{6,25}$/) &&
+    const showInputErr = (status: boolean, fir: boolean) => {
+        if (!fir) {
+            return false;
+        } else {
+            if (status) return false; else return true;
+        }
+    }
+
+    const onRegister = async (value: any) => {
+        validateAll();
+        if (commonValidate(name, /^[a-zA-z\s]{6,25}$/) &&
             validateMail(mail) &&
             commonValidate(address, /^[a-zA-z\d\s]{6,50}$/) &&
-            commonValidate(phoneNumber, /^[\d]{10,10}$/) &&
+            commonValidate(phoneNumber, /^[\d-]{12,12}$/) &&
             commonValidate(pass, /^[\w\W]{6,}$/) &&
-            (pass === repeatPass) && captcha
-        ) {
-            return true
-        }
-        return false
-    }
-
-    const onRegister = async () => {
-        if (validateAll()) {
+            (pass === repeatPass) && captcha) {
             BaseService.setStatusLoading(true);
             let data: IUser = {
                 name: name || '',
@@ -56,97 +80,54 @@ const Register: React.FC<{ history: any }> = ({history}) => {
                 BaseService.pushNotify('error', 'Opp !!! Register error !!!')
             }
         } else {
-            BaseService.pushNotify('error', 'Please check again form register');
+            BaseService.pushNotify('error', 'Please check form again')
         }
     }
 
 
     const formRegisterLeft = () => {
-
-        const showPass = (type: boolean) => {
-            return (
-                <div>
-                    {type ? <i className="far fa-eye" onClick={() => setCheckPass(!checkPass)}/> :
-                        <i className="far fa-eye-slash" onClick={() => setCheckPass(!checkPass)}/>}
-                </div>
-            )
-        }
-
         return (
             <div className={'form-register-left'}>
                 <div className={'form-title'}>Sign up</div>
-                <div className={'wrapper-input'}>
 
-                    <div>
-                        <div className={'wrapper-item'}>
-                            <i className="fas fa-user" style={styleValidate((commonValidate(name, /^[a-zA-z\s]{6,25}$/) || name === null), 'icon')}/>
-                            <input type="text" placeholder={'Your Name'} onChange={(event) => setName(event.target.value)}/>
-                        </div>
-                        <small style={styleValidate((commonValidate(name, /^[a-zA-z\s]{6,25}$/) || name === null), 'text')}>
-                            Your name should be between 6 and 25 characters
-                        </small>
-                    </div>
+                <Form onSubmit={onRegister}>
+                    <FormLayout>
 
-                    <div>
-                        <div className={'wrapper-item'}>
-                            <i className="fas fa-envelope" style={(validateMail(mail) || mail === null) ? {} : {color: 'red'}}/>
-                            <input type="text" placeholder={'Your Email'} onChange={(event) => setMail(event.target.value)}/>
-                        </div>
-                        <small style={(validateMail(mail) || mail === null) ? {} : {visibility: 'visible'}}>
-                            Wrong gmail format !!!
-                        </small>
-                    </div>
+                        <TextField value={name} onChange={handleNameChange} label="Your name" type="text"
+                                   minLength={6} maxLength={25} error={showInputErr(statusValName, statusFir)}
+                                   helpText={<span>6 - 25 characters</span>}
+                        />
 
-                    <div>
-                        <div className={'wrapper-item'}>
-                            <i className="fas fa-map-marker-alt"
-                               style={styleValidate(commonValidate(address, /^[a-zA-z\d\s]{6,50}$/) || address === null, 'icon')}/>
-                            <input type="text" placeholder={'Your Address'} onChange={(event) => setAddress(event.target.value)}/>
-                        </div>
-                        <small style={styleValidate(commonValidate(address, /^[a-zA-z\d\s]{6,50}$/) || address === null, 'text')}>
-                            Your address should be between 6 and 50 characters
-                        </small>
-                    </div>
+                        <TextField value={mail} onChange={handleEmailChange} label="Your email" type="email"
+                                   error={showInputErr(statusValMail, statusFir)}
+                                   helpText={<span>Fill your email.</span>}
+                        />
 
-                    <div>
-                        <div className={'wrapper-item'}>
-                            <i className="fas fa-mobile-alt"
-                               style={styleValidate(commonValidate(phoneNumber, /^[\d]{10,10}$/) || phoneNumber === null, 'icon')}/>
-                            <input type="text" placeholder={'Phone Number'} onChange={(event) => setPhoneNumber(event.target.value)}/>
-                        </div>
-                        <small style={styleValidate(commonValidate(phoneNumber, /^[\d]{10,10}$/) || phoneNumber === null, 'text')}>
-                            Your phone number must have 10 digits
-                        </small>
-                    </div>
+                        <TextField value={address} onChange={handleAddressChange} label="Your address" type="text"
+                                   minLength={6} maxLength={50} error={showInputErr(statusValAddress, statusFir)}
+                                   helpText={<span>Fill your address.</span>}
+                        />
 
-                    <div>
-                        <div className={'wrapper-item'}>
-                            <i className="fas fa-lock" style={styleValidate(commonValidate(pass, /^[\w\W]{6,}$/) || pass === null, 'icon')}/>
-                            {showPass(checkPass)}
-                            <input type={checkPass ? 'password' : 'text'} placeholder={'Password'} onChange={(event) => setPass(event.target.value)}/>
-                        </div>
-                        <small style={styleValidate(commonValidate(pass, /^[\w\W]{6,}$/) || pass === null, 'text')}>
-                            Your password should be less than 6 characters
-                        </small>
-                    </div>
+                        <TextField value={phoneNumber} onChange={handlePhoneChange} label="Your phone number" type="text"
+                                   minLength={12} maxLength={12} error={showInputErr(statusValPhone, statusFir)}
+                                   helpText={<span>9-digit number.</span>}
+                        />
 
-                    <div>
-                        <div className={'wrapper-item'}>
-                            <i className="fas fa-unlock" style={styleValidate(((pass === repeatPass) || (repeatPass === null)), 'icon')}/>
-                            <input type='password' placeholder={'Repeat your password'} onChange={(event) => setRepeatPass(event.target.value)}/>
-                        </div>
-                        <small style={styleValidate(((pass === repeatPass) || (repeatPass === null)), 'text')}>
-                            Not match your password
-                        </small>
-                    </div>
+                        <TextField value={pass} onChange={handlePassChange} label="Your password" type="password"
+                                   minLength={6} error={showInputErr(statusValPass, statusFir)}
+                                   helpText={<span>than less 6 characters.</span>}
+                        />
 
-                    <div style={{marginTop: 15}}>
-                        <ReCAPTCHA sitekey="6Lf_3cwaAAAAAIFbhWLizmBrGcl9jGO2W9ogXeYE" onChange={(data) => {
-                            setCaptcha(data);
-                        }}/>
-                    </div>
-                    <button style={validateAll() ? {} : {cursor: 'not-allowed'}} disabled={!validateAll()} onClick={() => onRegister()}>Register</button>
-                </div>
+                        <TextField value={repeatPass} onChange={handleRepeatPassChange} label="Repeat password" type="password"
+                                   minLength={6} error={showInputErr(statusValRepeatPass, statusFir)}
+                                   helpText={<span>Confirm your password.</span>}
+                        />
+
+                        <ReCAPTCHA sitekey="6Lf_3cwaAAAAAIFbhWLizmBrGcl9jGO2W9ogXeYE" onChange={(data) => handleRecaptchaChange(data)}/>
+
+                        <Button submit>Register</Button>
+                    </FormLayout>
+                </Form>
             </div>
         )
     }
@@ -156,8 +137,8 @@ const Register: React.FC<{ history: any }> = ({history}) => {
             <div className={'form-register-right'}>
                 <div className={'wrapper-img'} onClick={() => {
                     fetch('https://fakestoreapi.com/users?page=1&limit=10')
-                        .then(res=>res.json())
-                        .then(json=>console.log(json))
+                        .then(res => res.json())
+                        .then(json => console.log(json))
                 }
                 }>
                     <img src='https://colorlib.com/etc/regform/colorlib-regform-7/images/signup-image.jpg' alt='img'/>

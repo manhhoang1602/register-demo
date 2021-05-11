@@ -38,52 +38,8 @@
         font-weight: 800;
         font-size: 36px;
         text-align: center;
-        margin-top: 50px;
-        margin-bottom: 30px;
-      }
-
-      .wrapper-input {
-        button {
-          background-color: rgb(109, 171, 228);
-          padding: 15px 40px;
-          border-radius: 8px;
-          border: none;
-          margin: 20px auto;
-          outline: none;
-          color: white;
-          font-size: 15px;
-          cursor: pointer;
-        }
-
-        small {
-          color: red;
-          visibility: hidden;
-        }
-
-        .wrapper-item {
-          position: relative;
-
-          i {
-            position: absolute;
-            top: 30%;
-            left: 0;
-          }
-
-          .fa-eye, .fa-eye-slash {
-            left: 95%;
-            cursor: pointer;
-          }
-        }
-
-        input {
-          border: none;
-          border-bottom: 1px solid black;
-          padding: 10px 25px;
-
-          font-size: 15px;
-          outline: none;
-          width: 100%;
-        }
+        margin-top: 10px;
+        margin-bottom: 20px;
       }
 
     }
@@ -98,10 +54,6 @@
 
       .form-register-left {
         width: 100%;
-
-        button{
-          display: block;
-        }
       }
 
       .form-register-right {

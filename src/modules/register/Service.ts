@@ -6,3 +6,8 @@ export const validateMail = (email: string | null): boolean => {
 export const commonValidate = (value: string | null, re: any): boolean => {
     return re.test(String(value).toLowerCase());
 }
+
+export const formatPhoneNumber = (phoneNumber: string): string => {
+    let cleaned = phoneNumber.replace(/\D/g, '');
+    return cleaned.replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '$1-$2-$3');
+}
